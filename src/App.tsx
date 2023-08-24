@@ -7,10 +7,20 @@ interface PostGameResponse {
   game_id: string;
 }
 
+interface ClueRequest {
+  word: string;
+  count: number;
+}
+
 const App = () => {
   const [count, setCount] = createSignal(0);
 
   onMount(async () => {
+    console.log("Mounted");
+  });
+
+  const activate = async () => {
+    console.log("Activating");
     const game_id = await fetch("http://localhost:3000/game", {
       method: "POST",
       headers: {
@@ -22,12 +32,28 @@ const App = () => {
         return data.game_id;
       });
 
+    console.log(game_id);
     const eventSource = new EventSource(`http://localhost:3000/game/${game_id}`);
 
     eventSource.onmessage = (event) => {
       console.log(event.data);
     };
-  });
+
+    await fetch(`http://localhost:3000/clue/${game_id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        word: "test",
+        count: 1,
+      } as ClueRequest),
+    })
+      .then((res) => res.json() as Promise<PostGameResponse>)
+      .then((data) => {
+        return data.game_id;
+      });
+  };
 
   return (
     <>
@@ -46,7 +72,9 @@ const App = () => {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <p class="read-the-docs">Click on the Vite and Solid logos to learn more</p>
+      <div class="card">
+        <button onClick={activate}>Activate Me</button>
+      </div>
     </>
   );
 };

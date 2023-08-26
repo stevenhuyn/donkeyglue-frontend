@@ -1,22 +1,22 @@
-import { createSignal } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 import { CardModel, Identity } from "../model/GameTypes";
 import { classNames } from "../utils/ClassNames";
+import { GameService } from "../services/GameService";
 
-export interface CardGridProps {
-  board?: CardModel[];
-}
+export const Board = (props: undefined) => {
+  const gameService = GameService.Instance();
 
-export const Board = (props: CardGridProps) => {
-  const { board } = props;
-
-  console.log("Board", board);
+  onMount(() => {
+    gameService.initialise();
+  });
 
   return (
     <div class="flex flex-col items-center justify-center min-h-screen bg-gray-200">
       <div class="grid grid-cols-5 gap-4">
-        {board?.map((card, i) => (
-          <Cell key={i} word={card.word} guessed={card.guessed} identity={card.identity} />
-        ))}
+        {gameService.gameState()?.board.map((card, i) => {
+          console.log(card.identity);
+          return <Cell key={i} word={card.word} guessed={card.guessed} identity={card.identity} />;
+        })}
       </div>
     </div>
   );
@@ -36,17 +36,15 @@ export const Cell = (props: CardProps) => {
     <div
       class={classNames(
         "w-full p-4 text-center rounded text-black border border-black",
-        identity === Identity.Assassin && "bg-gray-400",
-        identity === Identity.Red && "bg-red",
-        identity === Identity.Blue && "bg-blue",
-        identity === Identity.Bystander && "bg-orange-100",
+        identity === Identity.Assassin && "bg-gray-200",
+        identity === Identity.Red && "bg-red-200",
+        identity === Identity.Blue && "bg-blue-200",
+        identity === Identity.Bystander && "bg-orange-200",
         identity === Identity.Hidden && "bg-white"
       )}
       onClick={toggleActive}
     >
       {word}
-      {guessed || "hmm?"}
-      {identity}
     </div>
   );
 };

@@ -2,27 +2,36 @@ import { createSignal, onMount } from "solid-js";
 import { CardModel, Identity } from "../model/GameTypes";
 import { classNames } from "../utils/ClassNames";
 import { GameService } from "../services/GameService";
+import { Phase } from "../model/Phase";
 
-export const Board = (props: undefined) => {
+export const Board = () => {
   const gameService = GameService.Instance();
 
   onMount(() => {
-    gameService.initialise();
+    gameService.initialise().then(() => {
+      console.log(gameService.gameState()?.phase);
+    });
   });
 
   return (
-    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-200">
+    <div class="flex flex-col items-center justify-center">
       <div class="grid grid-cols-5 gap-4">
         {gameService.gameState()?.board.map((card, i) => {
-          console.log(card.identity);
-          return <Cell key={i} word={card.word} guessed={card.guessed} identity={card.identity} />;
+          return (
+            <Cell
+              phase={gameService.gameState()?.phase}
+              word={card.word}
+              guessed={card.guessed}
+              identity={card.identity}
+            />
+          );
         })}
       </div>
     </div>
   );
 };
 
-export type CardProps = Partial<CardModel> & { key: number };
+export type CardProps = Partial<CardModel> & { phase?: Phase };
 
 export const Cell = (props: CardProps) => {
   const { key, word, guessed, identity } = props;
@@ -36,6 +45,7 @@ export const Cell = (props: CardProps) => {
     <div
       class={classNames(
         "w-full p-4 text-center rounded text-black border border-black",
+        "font-light",
         identity === Identity.Assassin && "bg-gray-200",
         identity === Identity.Red && "bg-red-200",
         identity === Identity.Blue && "bg-blue-200",

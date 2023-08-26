@@ -1,11 +1,16 @@
 import { Role } from "../model/GameTypes";
 
+const BACKEND_BASE_URL = window.location.host.includes("donkeyglue")
+  ? new URL("https://donkeyglue-frontend.onrender.com")
+  : new URL("http://localhost:3000");
+
 export interface PostGameResponse {
   game_id: string;
 }
 
 export const postGame = async (role: Role): Promise<string> => {
-  const gameId = await fetch("http://localhost:3000/game", {
+  const endpoint = new URL(`/game`, BACKEND_BASE_URL);
+  const gameId = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,12 +26,14 @@ export const postGame = async (role: Role): Promise<string> => {
 };
 
 export const getGame = async (gameId: string): Promise<EventSource> => {
-  const eventSource = new EventSource(`http://localhost:3000/game/${gameId}`);
+  const endpoint = new URL(`/game/${gameId}`, BACKEND_BASE_URL);
+  const eventSource = new EventSource(endpoint);
   return eventSource;
 };
 
 export const postStartGame = async (gameId: string): Promise<boolean> => {
-  const res = await fetch(`http://localhost:3000/game/start/${gameId}`, {
+  const endpoint = new URL(`/game/start/${gameId}`, BACKEND_BASE_URL);
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +49,8 @@ export interface ClueRequest {
 }
 
 export const postClue = async (gameId: string, clue: ClueRequest): Promise<boolean> => {
-  let res = await fetch(`http://localhost:3000/clue/${gameId}`, {
+  const endpoint = new URL(`/clue/${gameId}`, BACKEND_BASE_URL);
+  let res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -58,7 +66,8 @@ export interface GuessRequest {
 }
 
 export const postGuess = async (gameId: string, guess: GuessRequest): Promise<boolean> => {
-  let res = await fetch(`http://localhost:3000/guess/${gameId}`, {
+  const endpoint = new URL(`/guess/${gameId}`, BACKEND_BASE_URL);
+  let res = await fetch(`endpoint`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

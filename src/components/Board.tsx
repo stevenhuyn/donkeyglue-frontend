@@ -34,7 +34,7 @@ export const Board = () => {
 export type CardProps = Partial<CardModel> & { phase?: Phase };
 
 export const Cell = (props: CardProps) => {
-  const { key, word, guessed, identity } = props;
+  const { word, guessed, identity } = props;
   const [isActive, setIsActive] = createSignal(false);
 
   const toggleActive = () => {

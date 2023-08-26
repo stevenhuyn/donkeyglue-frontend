@@ -15,16 +15,16 @@ export const Counter = (props: CounterProps) => {
   return (
     <div class="join join-horizontal">
       <button
-        class={classNames("join-item btn", count() <= minCount && "btn-disabled")}
+        class={classNames("join-item btn w-11", count() <= minCount && "btn-disabled")}
         onClick={decrement}
       >
         -
       </button>
-      <div class="join-item bg-base-200 px-3  flex justify-center items-center z-10">
-        <span class="select-none font-light">{count()}</span>
+      <div class="join-item bg-base-200 px-3 w-7 flex justify-center items-center z-10">
+        <span class="select-none">{count()}</span>
       </div>
       <button
-        class={classNames("join-item btn", count() >= maxCount && "btn-disabled")}
+        class={classNames("join-item btn w-11", count() >= maxCount && "btn-disabled")}
         onClick={increment}
       >
         +

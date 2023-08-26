@@ -44,8 +44,9 @@ export const Cell = (props: CardProps) => {
   return (
     <div
       class={classNames(
-        "w-full p-4 text-center rounded text-black border border-black",
+        "w-full p-4 text-center rounded text-black border border-black select-none",
         "font-light",
+        "cursor-pointer",
         identity === Identity.Assassin && "bg-gray-200",
         identity === Identity.Red && "bg-red-200",
         identity === Identity.Blue && "bg-blue-200",

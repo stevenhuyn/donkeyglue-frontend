@@ -3,11 +3,7 @@ import { Phase, Team } from "../model/Phase";
 import { GameService } from "../services/GameService";
 import { classNames } from "../utils/ClassNames";
 
-interface PhaseTextProps {
-  phase?: Phase;
-}
-
-export const PhaseText = (props: PhaseTextProps) => {
+export const PhaseText = () => {
   const gameService = GameService.Instance();
 
   onMount(() => {

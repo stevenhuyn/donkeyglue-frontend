@@ -25,6 +25,17 @@ export const getGame = async (gameId: string): Promise<EventSource> => {
   return eventSource;
 };
 
+export const postStartGame = async (gameId: string): Promise<boolean> => {
+  const res = await fetch(`http://localhost:3000/game/start/${gameId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return res.ok;
+};
+
 export interface ClueRequest {
   word: string;
   count: number;
@@ -47,7 +58,7 @@ export interface GuessRequest {
 }
 
 export const postGuess = async (gameId: string, guess: GuessRequest): Promise<boolean> => {
-  let res = await fetch(`http://localhost:3000/clue/${gameId}`, {
+  let res = await fetch(`http://localhost:3000/guess/${gameId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

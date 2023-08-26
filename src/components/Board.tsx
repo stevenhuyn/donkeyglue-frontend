@@ -1,4 +1,3 @@
-import { createSignal, onMount } from "solid-js";
 import { CardModel, Identity } from "../model/GameTypes";
 import { classNames } from "../utils/ClassNames";
 import { GameService } from "../services/GameService";
@@ -7,16 +6,10 @@ import { Phase } from "../model/Phase";
 export const Board = () => {
   const gameService = GameService.Instance();
 
-  onMount(() => {
-    gameService.initialise().then(() => {
-      console.log("Board", gameService.gameState()?.phase);
-    });
-  });
-
   return (
     <div class="flex flex-col items-center justify-center">
       <div class="grid grid-cols-5 gap-4">
-        {gameService.gameState()?.board.map((card, i) => {
+        {gameService.gameState()?.board.map((card, _i) => {
           return (
             <Cell
               phase={gameService.gameState()?.phase}
@@ -34,11 +27,19 @@ export const Board = () => {
 export type CardProps = Partial<CardModel> & { phase?: Phase };
 
 export const Cell = (props: CardProps) => {
-  const { word, guessed, identity } = props;
-  const [isActive, setIsActive] = createSignal(false);
+  const gameService = GameService.Instance();
+  const { word, guessed: _, identity } = props;
 
   const toggleActive = () => {
-    setIsActive(!isActive());
+    if (word) {
+      gameService.makeGuess({ guess: word });
+    }
+  };
+
+  const cursorPhase = () => {
+    return gameService.gameState()?.phase?.type === "Guess"
+      ? "cursor-pointer"
+      : "cursor-not-allowed";
   };
 
   return (
@@ -46,7 +47,7 @@ export const Cell = (props: CardProps) => {
       class={classNames(
         "w-full p-4 text-center rounded text-black border border-black select-none",
         "font-light",
-        "cursor-pointer",
+        cursorPhase(),
         identity === Identity.Assassin && "bg-gray-200",
         identity === Identity.Red && "bg-red-200",
         identity === Identity.Blue && "bg-blue-200",

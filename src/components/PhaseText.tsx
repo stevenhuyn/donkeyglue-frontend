@@ -6,10 +6,6 @@ import { classNames } from "../utils/ClassNames";
 export const PhaseText = () => {
   const gameService = GameService.Instance();
 
-  onMount(() => {
-    gameService.initialise();
-  });
-
   const colorClass = () => phaseToColorClass(gameService.gameState()?.phase);
   const message = () => phaseToString(gameService.gameState()?.phase);
 

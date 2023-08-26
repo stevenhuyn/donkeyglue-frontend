@@ -9,7 +9,6 @@ export const GamePage = () => {
   const gameService = GameService.Instance();
 
   onMount(() => {
-    gameService.reset();
     gameService.initialise().then(() => {
       gameService.start();
     });

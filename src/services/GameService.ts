@@ -42,6 +42,8 @@ export class GameService {
   }
 
   public async initialise() {
+    this.reset();
+
     // TODO: Fix this delayed search param issue load time race condition, below is a hack
     await new Promise((resolve) => setTimeout(resolve, 200));
     const searchParams = new URLSearchParams(window.location.search);

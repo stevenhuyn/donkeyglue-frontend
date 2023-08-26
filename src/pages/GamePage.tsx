@@ -10,7 +10,9 @@ export const GamePage = () => {
 
   onMount(() => {
     gameService.reset();
-    gameService.initialise();
+    gameService.initialise().then(() => {
+      gameService.start();
+    });
   });
 
   createEffect(() => console.log("GamePage CreateEffect", gameService.gameState()));
@@ -18,7 +20,7 @@ export const GamePage = () => {
   return (
     <>
       <h1 class="font-light text-4xl m-6">Welcome to Donkey Glue</h1>
-      <PhaseText phase={gameService.gameState()?.phase}></PhaseText>
+      <PhaseText></PhaseText>
       <Board></Board>
       <input
         type="text"

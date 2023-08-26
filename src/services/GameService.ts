@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 import { GameState, Role, ServerMessage } from "../model/GameTypes";
-import { getGame, postGame } from "./ServerApi";
+import { GuessRequest, getGame, postGame, postGuess, postStartGame } from "./ServerApi";
 
 export class GameService {
   static #instance: GameService;
@@ -34,7 +34,7 @@ export class GameService {
   }
 
   public reset() {
-    this.#gameStateSignal[1](null);
+    this.setGameState(null);
     this.#role = null;
     this.#gameId = null;
     this.#eventSource?.close();
@@ -42,10 +42,14 @@ export class GameService {
   }
 
   public async initialise() {
+    // TODO: Fix this delayed search param issue load time race condition, below is a hack
+    await new Promise((resolve) => setTimeout(resolve, 200));
     const searchParams = new URLSearchParams(window.location.search);
+    console.log(window.location.search);
     const role = searchParams.get("role");
 
     if (role) {
+      console.log("Role Receieved");
       this.#gameId = await postGame(role as Role);
       this.#eventSource = await getGame(this.#gameId);
 
@@ -59,5 +63,20 @@ export class GameService {
     }
 
     console.log("INITIALISED");
+  }
+
+  public async start() {
+    if (this.#gameId) {
+      console.log("Starting");
+      postStartGame(this.#gameId);
+    } else {
+      console.log("Unable to start");
+    }
+  }
+
+  public async makeGuess(guess: GuessRequest) {
+    if (this.#gameId) {
+      postGuess(this.#gameId, guess);
+    }
   }
 }

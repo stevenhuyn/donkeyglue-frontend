@@ -1,7 +1,7 @@
 import { Role } from "../model/GameTypes";
 
 const BACKEND_BASE_URL = window.location.host.includes("donkeyglue")
-  ? new URL("https://donkeyglue-frontend.onrender.com")
+  ? new URL("https://donkeyglue-backend-production.up.railway.app")
   : new URL("http://localhost:3000");
 
 export interface PostGameResponse {
@@ -67,7 +67,7 @@ export interface GuessRequest {
 
 export const postGuess = async (gameId: string, guess: GuessRequest): Promise<boolean> => {
   const endpoint = new URL(`/guess/${gameId}`, BACKEND_BASE_URL);
-  let res = await fetch(`endpoint`, {
+  let res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

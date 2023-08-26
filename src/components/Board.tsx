@@ -9,7 +9,7 @@ export const Board = () => {
 
   onMount(() => {
     gameService.initialise().then(() => {
-      console.log(gameService.gameState()?.phase);
+      console.log("Board", gameService.gameState()?.phase);
     });
   });
 

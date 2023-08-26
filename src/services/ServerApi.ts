@@ -1,13 +1,16 @@
+import { Role } from "../model/GameTypes";
+
 export interface PostGameResponse {
   game_id: string;
 }
 
-export const postGame = async (): Promise<string> => {
+export const postGame = async (role: Role): Promise<string> => {
   const gameId = await fetch("http://localhost:3000/game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({ role: role }),
   })
     .then((res) => res.json() as Promise<PostGameResponse>)
     .then((data) => {

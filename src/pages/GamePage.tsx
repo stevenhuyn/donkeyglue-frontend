@@ -1,21 +1,24 @@
-import { createSignal, onMount } from "solid-js";
+import { createEffect, createSignal, onMount } from "solid-js";
 import { Board } from "../components/Board";
 import { Counter } from "../components/Counter";
 import { GameService } from "../services/GameService";
-import { phaseToString } from "../model/Phase";
+import { PhaseText } from "../components/PhaseText";
 
-export const RootPage = () => {
+export const GamePage = () => {
   const [clueCount, setClueCount] = createSignal(1);
   const gameService = GameService.Instance();
 
   onMount(() => {
+    gameService.reset();
     gameService.initialise();
   });
+
+  createEffect(() => console.log("GamePage CreateEffect", gameService.gameState()));
 
   return (
     <>
       <h1 class="font-light text-4xl m-6">Welcome to Donkey Glue</h1>
-      <h1 class="font-light text-2xl m-6">{phaseToString(gameService.gameState()?.phase)}</h1>
+      <PhaseText phase={gameService.gameState()?.phase}></PhaseText>
       <Board></Board>
       <input
         type="text"

@@ -1,20 +1,20 @@
 import { Phase } from "./Phase";
 
 export interface GameState {
-  board: Card[];
+  board: CardModel[];
   phase: Phase;
 }
 
-export interface Card {
+export interface CardModel {
   word: string;
   guessed: boolean;
   identity: Identity;
 }
 
 export const enum Identity {
-  Red,
-  Blue,
-  Assassin,
-  Bystander,
-  Hidden,
+  Red = "Red",
+  Blue = "Blue",
+  Assassin = "Assassin",
+  Bystander = "Bystander",
+  Hidden = "Hidden",
 }

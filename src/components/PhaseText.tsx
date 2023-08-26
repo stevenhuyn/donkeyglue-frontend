@@ -1,4 +1,3 @@
-import { onMount } from "solid-js";
 import { Phase, Team } from "../model/Phase";
 import { GameService } from "../services/GameService";
 import { classNames } from "../utils/ClassNames";

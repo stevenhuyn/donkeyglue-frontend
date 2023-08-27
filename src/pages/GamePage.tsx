@@ -1,4 +1,4 @@
-import { Show, createEffect, createSignal, onMount } from "solid-js";
+import { Show, createSignal, onMount } from "solid-js";
 import { Board } from "../components/Board";
 import { Counter } from "../components/Counter";
 import { GameService } from "../services/GameService";

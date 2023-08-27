@@ -25,7 +25,7 @@ export const Board = () => {
   );
 };
 
-export type CardProps = Partial<CardModel> & { phase?: Phase; role?: Role };
+export type CardProps = Partial<CardModel> & { phase?: Phase; role: Role | null };
 
 export const Cell = (props: CardProps) => {
   const gameService = GameService.Instance();
@@ -55,10 +55,10 @@ export const Cell = (props: CardProps) => {
       );
     } else if (role === Role.RedSpymaster) {
       return classNames(
-        guessed && identity === Identity.Assassin && "bg-gray-400 text-white",
-        guessed && identity === Identity.Red && "bg-red-200 text-white",
-        guessed && identity === Identity.Blue && "bg-blue-200 text-white",
-        guessed && identity === Identity.Bystander && "bg-orange-200 text-white",
+        guessed && identity === Identity.Assassin && "bg-gray-400 text-black",
+        guessed && identity === Identity.Red && "bg-red-200 text-black",
+        guessed && identity === Identity.Blue && "bg-blue-200 text-black",
+        guessed && identity === Identity.Bystander && "bg-orange-200 text-black",
         !guessed && identity === Identity.Assassin && "bg-gray-600 text-white font-medium",
         !guessed && identity === Identity.Red && "bg-gray-200 text-red-600",
         !guessed && identity === Identity.Blue && "bg-gray-200 text-blue-600",

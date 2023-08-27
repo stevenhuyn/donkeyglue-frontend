@@ -1,4 +1,4 @@
-import { CardModel, Identity } from "../model/GameTypes";
+import { CardModel, Identity, Role } from "../model/GameTypes";
 import { classNames } from "../utils/ClassNames";
 import { GameService } from "../services/GameService";
 import { Phase } from "../model/Phase";
@@ -16,6 +16,7 @@ export const Board = () => {
               word={card.word}
               guessed={card.guessed}
               identity={card.identity}
+              role={gameService.role()}
             />
           );
         })}
@@ -24,11 +25,11 @@ export const Board = () => {
   );
 };
 
-export type CardProps = Partial<CardModel> & { phase?: Phase };
+export type CardProps = Partial<CardModel> & { phase?: Phase; role?: Role };
 
 export const Cell = (props: CardProps) => {
   const gameService = GameService.Instance();
-  const { word, guessed: _, identity } = props;
+  const { word, guessed, identity, role } = props;
 
   const toggleActive = () => {
     if (word) {
@@ -42,17 +43,40 @@ export const Cell = (props: CardProps) => {
       : "cursor-not-allowed";
   };
 
+  const backgroundClass = () => {
+    console.log(role);
+    if (role === Role.RedOperative) {
+      return classNames(
+        identity === Identity.Assassin && "bg-gray-400",
+        identity === Identity.Red && "bg-red-200",
+        identity === Identity.Blue && "bg-blue-200",
+        identity === Identity.Bystander && "bg-orange-200",
+        identity === Identity.Hidden && "bg-gray-200"
+      );
+    } else if (role === Role.RedSpymaster) {
+      return classNames(
+        guessed && identity === Identity.Assassin && "bg-gray-400 text-white",
+        guessed && identity === Identity.Red && "bg-red-200 text-white",
+        guessed && identity === Identity.Blue && "bg-blue-200 text-white",
+        guessed && identity === Identity.Bystander && "bg-orange-200 text-white",
+        !guessed && identity === Identity.Assassin && "bg-gray-600 text-white font-medium",
+        !guessed && identity === Identity.Red && "bg-gray-200 text-red-600",
+        !guessed && identity === Identity.Blue && "bg-gray-200 text-blue-600",
+        !guessed && identity === Identity.Bystander && "bg-gray-200 text-black-600"
+      );
+    }
+  };
+
+  console.log("backgroundClass", backgroundClass());
+
   return (
     <div
       class={classNames(
         "w-full p-4 text-center rounded text-black border border-black select-none",
         "font-light",
+
         cursorPhase(),
-        identity === Identity.Assassin && "bg-gray-200",
-        identity === Identity.Red && "bg-red-200",
-        identity === Identity.Blue && "bg-blue-200",
-        identity === Identity.Bystander && "bg-orange-200",
-        identity === Identity.Hidden && "bg-white"
+        backgroundClass()
       )}
       onClick={toggleActive}
     >

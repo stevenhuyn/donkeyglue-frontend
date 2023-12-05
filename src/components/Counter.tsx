@@ -1,4 +1,4 @@
-import { Accessor } from "solid-js";
+import { Accessor, Setter } from "solid-js";
 import { classNames } from "../utils/ClassNames";
 import { GameService } from "../services/GameService";
 import { CardModel, Identity } from "../model/GameTypes";
@@ -6,12 +6,13 @@ import { CardModel, Identity } from "../model/GameTypes";
 export interface CounterProps {
   decrement: () => void;
   increment: () => void;
+  setCount: Setter<number>;
   count: Accessor<number>;
 }
 
 export const Counter = (props: CounterProps) => {
   const gameService = GameService.Instance();
-  const { count, decrement, increment } = props;
+  const { count, setCount, decrement, increment } = props;
 
   const maxClueCount = (): number => {
     let board = gameService.gameState()?.board;
@@ -21,6 +22,9 @@ export const Counter = (props: CounterProps) => {
     }
 
     let maxCount = board.filter((card: CardModel) => card.identity === Identity.Red).length;
+
+    setCount(Math.min(count(), maxCount));
+
     return maxCount;
   };
 

@@ -62,6 +62,7 @@ export const GamePage = () => {
         <Counter
           decrement={() => setClueCount((prev) => prev - 1)}
           increment={() => setClueCount((prev) => prev + 1)}
+          setCount={setClueCount}
           count={clueCount}
         ></Counter>
         <button class="btn mx-10" disabled={!cluePhase() || !canSubmitClue()} onClick={submitClue}>

@@ -1,21 +1,34 @@
 import { Accessor } from "solid-js";
 import { classNames } from "../utils/ClassNames";
+import { GameService } from "../services/GameService";
+import { CardModel, Identity } from "../model/GameTypes";
 
 export interface CounterProps {
   decrement: () => void;
   increment: () => void;
-  minCount: number;
-  maxCount: number;
   count: Accessor<number>;
 }
 
 export const Counter = (props: CounterProps) => {
-  const { count, minCount, maxCount, decrement, increment } = props;
+  const gameService = GameService.Instance();
+  const { count, decrement, increment } = props;
+
+  const maxClueCount = (): number => {
+    let board = gameService.gameState()?.board;
+
+    if (!board) {
+      return 1;
+    }
+
+    let maxCount = board.filter((card: CardModel) => card.identity === Identity.Red).length;
+    console.log(maxCount, board);
+    return maxCount;
+  };
 
   return (
     <div class="join join-horizontal">
       <button
-        class={classNames("join-item btn w-11", count() <= minCount && "btn-disabled")}
+        class={classNames("join-item btn w-11", count() <= 1 && "btn-disabled")}
         onClick={decrement}
       >
         -
@@ -24,7 +37,7 @@ export const Counter = (props: CounterProps) => {
         <span class="select-none">{count()}</span>
       </div>
       <button
-        class={classNames("join-item btn w-11", count() >= maxCount && "btn-disabled")}
+        class={classNames("join-item btn w-11", count() >= maxClueCount() && "btn-disabled")}
         onClick={increment}
       >
         +

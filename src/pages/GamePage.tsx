@@ -4,7 +4,7 @@ import { Counter } from "../components/Counter";
 import { GameService } from "../services/GameService";
 import { PhaseText } from "../components/PhaseText";
 import { Team } from "../model/Phase";
-import { Role } from "../model/GameTypes";
+import { CardModel, Identity, Role } from "../model/GameTypes";
 
 export const GamePage = () => {
   const [clueCount, setClueCount] = createSignal(1);
@@ -35,6 +35,18 @@ export const GamePage = () => {
     return true;
   };
 
+  const maxClueCount = (): number => {
+    let board = gameService.gameState()?.board;
+
+    if (!board) {
+      return 1;
+    }
+
+    let maxCount = board.filter((card: CardModel) => card.identity === Identity.Red).length;
+    console.log(maxCount, board);
+    return maxCount;
+  };
+
   const submitClue = () => {
     gameService.provideClue({ word: clueWord(), count: clueCount() });
   };
@@ -59,7 +71,7 @@ export const GamePage = () => {
           increment={() => setClueCount((prev) => prev + 1)}
           count={clueCount}
           minCount={1}
-          maxCount={5}
+          maxCount={maxClueCount()}
         ></Counter>
         <button class="btn mx-10" disabled={!cluePhase() || !canSubmitClue()} onClick={submitClue}>
           Submit

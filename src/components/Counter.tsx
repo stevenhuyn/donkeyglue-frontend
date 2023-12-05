@@ -21,7 +21,6 @@ export const Counter = (props: CounterProps) => {
     }
 
     let maxCount = board.filter((card: CardModel) => card.identity === Identity.Red).length;
-    console.log(maxCount, board);
     return maxCount;
   };
 

@@ -58,21 +58,17 @@ export class GameService {
     const role = searchParams.get("role");
 
     if (role) {
-      console.log("Role Receieved");
       this.#gameId = await postGame(role as Role);
       this.#eventSource = await getGame(this.#gameId);
       this.setRole(role as Role);
 
       if (this.#eventSource) {
         this.#eventSource.onmessage = (event) => {
-          // console.log(event.data);
           const serverMessage = JSON.parse(event.data) as ServerMessage;
           this.setGameState(serverMessage.gameState);
         };
       }
     }
-
-    console.log("INITIALISED");
   }
 
   public async start() {

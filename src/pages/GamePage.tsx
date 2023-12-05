@@ -14,8 +14,6 @@ export const GamePage = () => {
   onMount(() => {
     gameService.initialise().then(() => {
       gameService.start();
-      console.log("cluePhase", cluePhase());
-      console.log("canSubmitClue", canSubmitClue());
     });
   });
 

@@ -44,7 +44,6 @@ export const Cell = (props: CardProps) => {
   };
 
   const backgroundClass = () => {
-    console.log(role);
     if (role === Role.RedOperative) {
       return classNames(
         identity === Identity.Assassin && "bg-gray-400",
@@ -66,8 +65,6 @@ export const Cell = (props: CardProps) => {
       );
     }
   };
-
-  console.log("backgroundClass", backgroundClass());
 
   return (
     <div

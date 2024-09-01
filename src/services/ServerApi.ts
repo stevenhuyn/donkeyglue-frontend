@@ -1,7 +1,7 @@
 import { Role } from "../model/GameTypes";
 
 const BACKEND_BASE_URL = window.location.host.includes("donkeyglue")
-  ? new URL("https://donkeyglue-backend-production.up.railway.app")
+  ? new URL("https://api.donkeyglue.stevenhuyn.com")
   : new URL("http://localhost:3000");
 
 export interface PostGameResponse {

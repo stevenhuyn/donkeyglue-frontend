@@ -16,9 +16,9 @@ const phaseToString = (phase: Phase | undefined, role: Role | null): string => {
   if (!phase) return "Loading";
 
   if (phase.type === "Clue") {
-    return `${phase.team} Spymaster ${role === Role.RedSpymaster ? "(You)" : ""} to give a Clue`;
+    return `${phase.team} Spymaster ${role === Role.RedSpymaster && phase.team === Team.Red ? "(You)" : ""} to give a Clue`;
   } else if (phase.type === "Guess") {
-    return `${phase.team} Operative ${role === Role.RedOperative ? "(You)" : ""} to Guess - Clue: ${
+    return `${phase.team} Operative ${role === Role.RedOperative && phase.team === Team.Red ? "(You)" : ""} to Guess - Clue: ${
       phase.clue.word
     } - Remaining ${phase.clue.remaining}`;
   } else {

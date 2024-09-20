@@ -19,7 +19,7 @@ export class GameService {
   #eventSource: EventSource | null = null;
 
   public get gameState() {
-    console.debug(this.#gameStateSignal[0]);
+    console.debug(this.#gameStateSignal[0]());
     return this.#gameStateSignal[0];
   }
 

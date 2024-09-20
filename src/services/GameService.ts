@@ -71,7 +71,9 @@ export class GameService {
         console.debug("eventsource found");
 
         this.#eventSource.onmessage = (event) => {
+          console.debug("message received");
           const serverMessage = JSON.parse(event.data) as ServerMessage;
+          console.debug("message received 2", serverMessage);
           this.setGameState(serverMessage.gameState);
         };
       }

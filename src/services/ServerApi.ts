@@ -1,4 +1,4 @@
-import { Role } from "../model/GameTypes";
+import { GameState, Role } from "../model/GameTypes";
 
 const BACKEND_BASE_URL = window.location.host.includes("donkeyglue")
   ? new URL("https://api.donkeyglue.stevenhuyn.com")
@@ -25,10 +25,22 @@ export const postGame = async (role: Role): Promise<string> => {
   return gameId;
 };
 
-export const getGame = async (gameId: string): Promise<EventSource> => {
+export interface GetGameResponse {
+  type: "Playing";
+  gameState: GameState;
+  role: Role;
+}
+
+export const getGame = async (gameId: string): Promise<GetGameResponse> => {
   const endpoint = new URL(`/game/${gameId}`, BACKEND_BASE_URL);
-  const eventSource = new EventSource(endpoint);
-  return eventSource;
+  return await fetch(endpoint, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json() as Promise<GetGameResponse>)
+    .then((data) => data);
 };
 
 export const postStartGame = async (gameId: string): Promise<boolean> => {
@@ -48,7 +60,10 @@ export interface ClueRequest {
   count: number;
 }
 
-export const postClue = async (gameId: string, clue: ClueRequest): Promise<boolean> => {
+export const postClue = async (
+  gameId: string,
+  clue: ClueRequest
+): Promise<boolean> => {
   const endpoint = new URL(`/clue/${gameId}`, BACKEND_BASE_URL);
   let res = await fetch(endpoint, {
     method: "POST",
@@ -65,7 +80,10 @@ export interface GuessRequest {
   guess: string;
 }
 
-export const postGuess = async (gameId: string, guess: GuessRequest): Promise<boolean> => {
+export const postGuess = async (
+  gameId: string,
+  guess: GuessRequest
+): Promise<boolean> => {
   const endpoint = new URL(`/guess/${gameId}`, BACKEND_BASE_URL);
   let res = await fetch(endpoint, {
     method: "POST",

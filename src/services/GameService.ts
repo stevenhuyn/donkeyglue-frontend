@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { GameState, Role, ServerMessage } from "../model/GameTypes";
+import { GameState, Role } from "../model/GameTypes";
 import {
   ClueRequest,
   getGame,
@@ -16,7 +16,7 @@ export class GameService {
   readonly #gameStateSignal = createSignal<GameState | null>(null);
   readonly #roleSignal = createSignal<Role | null>(null);
   #gameId: string | null = null;
-  #eventSource: EventSource | null = null;
+  #gameDataInterval: number | null = null;
 
   public get gameState() {
     console.debug(this.#gameStateSignal[0]());
@@ -46,8 +46,9 @@ export class GameService {
     this.setGameState(null);
     this.setRole(null);
     this.#gameId = null;
-    this.#eventSource?.close();
-    this.#eventSource = null;
+    if (this.#gameDataInterval) {
+      clearInterval(this.#gameDataInterval);
+    }
   }
 
   public async initialise() {
@@ -62,21 +63,13 @@ export class GameService {
 
     if (role) {
       this.#gameId = await postGame(role as Role);
-      this.#eventSource = await getGame(this.#gameId);
       this.setRole(role as Role);
 
       console.debug("role setting", this.#gameId, role);
 
-      if (this.#eventSource) {
-        console.debug("eventsource found");
-
-        this.#eventSource.onmessage = (event) => {
-          console.debug("message received");
-          const serverMessage = JSON.parse(event.data) as ServerMessage;
-          console.debug("message received 2", serverMessage);
-          this.setGameState(serverMessage.gameState);
-        };
-      }
+      this.#gameDataInterval = setInterval(() => {
+        this.updateGameState();
+      }, 1000);
     }
   }
 
@@ -89,12 +82,22 @@ export class GameService {
   public async makeGuess(guess: GuessRequest) {
     if (this.#gameId) {
       postGuess(this.#gameId, guess);
+      await this.updateGameState();
     }
   }
 
   public async provideClue(clue: ClueRequest) {
     if (this.#gameId) {
       postClue(this.#gameId, clue);
+      await this.updateGameState();
+    }
+  }
+
+  public async updateGameState() {
+    if (this.#gameId) {
+      const gameData = await getGame(this.#gameId);
+      this.setGameState(gameData.gameState);
+      this.setRole(gameData.role);
     }
   }
 }

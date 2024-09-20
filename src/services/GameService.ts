@@ -2,8 +2,8 @@ import { createSignal } from "solid-js";
 import { GameState, Role, ServerMessage } from "../model/GameTypes";
 import {
   ClueRequest,
-  GuessRequest,
   getGame,
+  GuessRequest,
   postClue,
   postGame,
   postGuess,
@@ -57,12 +57,18 @@ export class GameService {
     const searchParams = new URLSearchParams(window.location.search);
     const role = searchParams.get("role");
 
+    console.debug("intialize", role);
+
     if (role) {
       this.#gameId = await postGame(role as Role);
       this.#eventSource = await getGame(this.#gameId);
       this.setRole(role as Role);
 
+      console.debug("role setting", this.#gameId, role);
+
       if (this.#eventSource) {
+        console.debug("eventsource found");
+
         this.#eventSource.onmessage = (event) => {
           const serverMessage = JSON.parse(event.data) as ServerMessage;
           this.setGameState(serverMessage.gameState);
